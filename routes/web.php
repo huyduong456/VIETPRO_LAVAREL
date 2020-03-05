@@ -11,6 +11,7 @@
 |
 */
 
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -20,6 +21,20 @@ Route::group([
     'namespace' => 'Admin'
 
 ], function () {
+    Route::resource('categories', 'CategoryController');
+    Route::get('', 'DashboardController');
+    Route::get('login', 'LoginController@showLoginForm');
+    Route::post('login', 'LoginController@login');
+    Route::post('logout', 'LoginController@logout');
+    Route::group(['prefix' => 'orders'], function () {
+        Route::get('', 'OrderController@index');
+        Route::get('processed', 'OrderController@processed');
+        Route::get('{order}/edit', 'OrderController@edit');
+        Route::put('{order}', 'OrderController@update');
+
+        });
+    });
+
     Route::group(['prefix' => 'products'], function(){
         Route::get('', 'ProductController@index');
         Route::get('create', 'ProductController@create'); // sau @ là tên function
@@ -29,7 +44,7 @@ Route::group([
         Route::delete('{product}', 'ProductController@destroy');
     });
     Route::resource('users', 'UserController');
-});
+
 Route::group([
     'prefix' => 'admin',
     'namespace' => 'Admin'
